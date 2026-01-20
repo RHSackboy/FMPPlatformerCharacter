@@ -21,9 +21,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     Transform playerInputSpace;
 
+    Vector3 cameraRelativeMovement;
+ 
+
     //input
     InputAction moveAction;
     InputAction jumpAction;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -34,6 +38,7 @@ public class PlayerMovement : MonoBehaviour
     void Awake()
     {
         body = GetComponent<Rigidbody>();
+        
     }
 
     // Update is called once per frame
@@ -45,16 +50,17 @@ public class PlayerMovement : MonoBehaviour
         playerInput.y = moveAction.ReadValue<Vector2>().y;
         playerInput = Vector2.ClampMagnitude(playerInput, 1f);
 
-        Vector3 camForward =  playerInputSpace.forward;
-        Vector3 camRight = playerInputSpace.right;
-        camForward.y = 0;
-        camRight.y = 0;
-        camForward = camForward.normalized;
-        camRight = camRight.normalized;
+        //camera vectors
+        Vector3 camForward = transform.InverseTransformVector(Camera.main.transform.forward);
+        Vector3 camRight = transform.InverseTransformVector(Camera.main.transform.right);
 
+        Vector3 rightRelativeVerticalInput = playerInput.x * camRight;
+        Vector3 forwardRelativeVerticalInput = playerInput.y * camForward;
 
-        desiredVelocity = new Vector3(playerInput.x, 0f, playerInput.y) * maxSpeed;
+        cameraRelativeMovement = (forwardRelativeVerticalInput + rightRelativeVerticalInput);
 
+        //desiredVelocity = new Vector3(playerInput.x, 0f, playerInput.y) * maxSpeed;
+        
         //fix relative movement
         //desiredVelocity = playerInputSpace.TransformDirection(playerInput.x, 0f, playerInput.y) * maxSpeed;
 
@@ -63,8 +69,10 @@ public class PlayerMovement : MonoBehaviour
     {
 		velocity = body.linearVelocity;
 		float maxSpeedChange = maxAcceleration * Time.deltaTime;
-		velocity.x = Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxSpeedChange);
-		velocity.z = Mathf.MoveTowards(velocity.z, desiredVelocity.z, maxSpeedChange);
+
+        //velocity.x = Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxSpeedChange);
+		//velocity.z = Mathf.MoveTowards(velocity.z, desiredVelocity.z, maxSpeedChange);
 		body.linearVelocity = velocity;
+        
     }
 }
