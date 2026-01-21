@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using Unity.Mathematics;
 using UnityEditor.UI;
 using UnityEngine;
@@ -23,6 +24,6 @@ public class InputSpace : MonoBehaviour
     {
         transform.position = Camera.transform.position;
 
-        transform.rotation = quaternion.Euler(new Vector3(Camera.transform.rotation.x,0,Camera.transform.rotation.z));
+        //transform.rotation = quaternion.Euler(new Vector3(Camera.transform.rotation.x, Camera.transform.rotation.y, Camera.transform.rotation.z));
     }
 }

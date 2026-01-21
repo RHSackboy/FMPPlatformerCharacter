@@ -3,6 +3,7 @@ using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using UnityEngine.WSA;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     Vector3 velocity;
     Vector3 desiredVelocity;
+    [SerializeField]
     bool desiredJump;
     
     //references
@@ -62,7 +64,13 @@ public class PlayerMovement : MonoBehaviour
         //desiredVelocity = new Vector3(playerInput.x, 0f, playerInput.y) * maxSpeed;
         
         //fix relative movement
-        //desiredVelocity = playerInputSpace.TransformDirection(playerInput.x, 0f, playerInput.y) * maxSpeed;
+        desiredVelocity = playerInputSpace.TransformDirection(playerInput.x, 0f, playerInput.y) * maxSpeed;
+
+        if(jumpAction.triggered == true)
+        {
+            desiredJump = true;
+        }
+
 
     }
 	void FixedUpdate ()
@@ -70,9 +78,20 @@ public class PlayerMovement : MonoBehaviour
 		velocity = body.linearVelocity;
 		float maxSpeedChange = maxAcceleration * Time.deltaTime;
 
-        //velocity.x = Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxSpeedChange);
-		//velocity.z = Mathf.MoveTowards(velocity.z, desiredVelocity.z, maxSpeedChange);
-		body.linearVelocity = velocity;
-        
+        velocity.x = Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxSpeedChange);
+		velocity.z = Mathf.MoveTowards(velocity.z, desiredVelocity.z, maxSpeedChange);
+
+        if (desiredJump)
+        {
+            desiredJump = false;
+            Jump();
+        }
+
+        body.linearVelocity = velocity;
+    }
+
+    void Jump ()
+    {
+        velocity.y += 5f;
     }
 }
