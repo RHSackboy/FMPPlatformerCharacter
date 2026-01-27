@@ -12,17 +12,20 @@ public class PlayerMovement : MonoBehaviour
     float maxSpeed = 10f;
     [SerializeField, Range(0f, 100f)]
     float maxAcceleration = 10f;
+   	[SerializeField, Range(0f, 10f)]
+	float jumpHeight = 5f;
     [SerializeField]
     Vector3 velocity;
     Vector3 desiredVelocity;
     [SerializeField]
     bool desiredJump;
-    
+    bool onGround;
+
+
     //references
     Rigidbody body;
     [SerializeField]
     Transform playerInputSpace;
-
     Vector3 cameraRelativeMovement;
  
 
@@ -62,10 +65,12 @@ public class PlayerMovement : MonoBehaviour
         cameraRelativeMovement = (forwardRelativeVerticalInput + rightRelativeVerticalInput);
 
         //desiredVelocity = new Vector3(playerInput.x, 0f, playerInput.y) * maxSpeed;
-        
+
         //fix relative movement
         desiredVelocity = playerInputSpace.TransformDirection(playerInput.x, 0f, playerInput.y) * maxSpeed;
 
+
+        //jumping
         if(jumpAction.triggered == true)
         {
             desiredJump = true;
@@ -88,10 +93,35 @@ public class PlayerMovement : MonoBehaviour
         }
 
         body.linearVelocity = velocity;
+        onGround = false;
     }
+
+
+        //collision detection
+        void OnCollisionEnter(Collision collision)
+    {
+        //onGround = true;
+        EvaluateCollision(collision);
+    }
+    void OnCollisionStay(Collision collision)
+    {
+        //onGround = true;
+        EvaluateCollision(collision);
+    }
+
+    //differentiate floors and walls for jumping
+	void EvaluateCollision (Collision collision) {
+		for (int i = 0; i < collision.contactCount; i++) {
+			Vector3 normal = collision.GetContact(i).normal;
+            onGround |= normal.y >= 0.9f;
+		}
+	}
 
     void Jump ()
     {
-        velocity.y += 5f;
+        if(onGround)
+        {
+            velocity.y += jumpHeight;
+        }
     }
 }

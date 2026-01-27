@@ -888,9 +888,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 5
   maxAcceleration: 20
+  jumpHeight: 5
   velocity: {x: 0, y: 0, z: 0}
   desiredJump: 0
-  playerInputSpace: {fileID: 1623368698}
+  playerInputSpace: {fileID: 1615137745}
 --- !u!1 &778219567
 GameObject:
   m_ObjectHideFlags: 0
