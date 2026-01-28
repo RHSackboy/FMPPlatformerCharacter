@@ -1,9 +1,8 @@
 using Unity.Mathematics;
-using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
-using UnityEngine.WSA;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -14,13 +13,14 @@ public class PlayerMovement : MonoBehaviour
     float maxAcceleration = 10f;
    	[SerializeField, Range(0f, 10f)]
 	float jumpHeight = 5f;
+    
+    //internal variables
     [SerializeField]
     Vector3 velocity;
     Vector3 desiredVelocity;
-    [SerializeField]
     bool desiredJump;
     bool onGround;
-
+    bool cursorLock = true;
 
     //references
     Rigidbody body;
@@ -28,22 +28,26 @@ public class PlayerMovement : MonoBehaviour
     Transform playerInputSpace;
     Vector3 cameraRelativeMovement;
  
-
     //input
     InputAction moveAction;
     InputAction jumpAction;
+    InputAction resetGameAction;
+    InputAction unfocusAction;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //reference action map
         moveAction = InputSystem.actions.FindAction("Move");
         jumpAction = InputSystem.actions.FindAction("Jump");
+        resetGameAction = InputSystem.actions.FindAction("Reset Game");
+        unfocusAction = InputSystem.actions.FindAction("Unfocus");
     }
     void Awake()
     {
+        //initialise rigid body
         body = GetComponent<Rigidbody>();
-        
     }
 
     // Update is called once per frame
@@ -55,18 +59,18 @@ public class PlayerMovement : MonoBehaviour
         playerInput.y = moveAction.ReadValue<Vector2>().y;
         playerInput = Vector2.ClampMagnitude(playerInput, 1f);
 
-        //camera vectors
-        Vector3 camForward = transform.InverseTransformVector(Camera.main.transform.forward);
-        Vector3 camRight = transform.InverseTransformVector(Camera.main.transform.right);
+        //camera vectors (not used right now)
+        //Vector3 camForward = transform.InverseTransformVector(Camera.main.transform.forward);
+        //Vector3 camRight = transform.InverseTransformVector(Camera.main.transform.right);
 
-        Vector3 rightRelativeVerticalInput = playerInput.x * camRight;
-        Vector3 forwardRelativeVerticalInput = playerInput.y * camForward;
+        //Vector3 rightRelativeVerticalInput = playerInput.x * camRight;
+        //Vector3 forwardRelativeVerticalInput = playerInput.y * camForward;
 
-        cameraRelativeMovement = (forwardRelativeVerticalInput + rightRelativeVerticalInput);
+        //cameraRelativeMovement = (forwardRelativeVerticalInput + rightRelativeVerticalInput);
 
         //desiredVelocity = new Vector3(playerInput.x, 0f, playerInput.y) * maxSpeed;
 
-        //fix relative movement
+        //need to fix relative movement
         desiredVelocity = playerInputSpace.TransformDirection(playerInput.x, 0f, playerInput.y) * maxSpeed;
 
 
@@ -77,10 +81,39 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
+        //reset input
+        if (resetGameAction.triggered == true)
+        {
+            Reset();
+        }
+
+
+        //cursor lock
+        if (cursorLock)
+        {
+            UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+            UnityEngine.Cursor.visible = false;
+        }
+        else
+        {
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
+            UnityEngine.Cursor.visible = true;
+        }
+
+        if (unfocusAction.triggered == true)
+        {
+            cursorLock = false;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            cursorLock = true;
+        }
     }
 	void FixedUpdate ()
     {
-		velocity = body.linearVelocity;
+		//set rigidbody speeds 
+        velocity = body.linearVelocity;
 		float maxSpeedChange = maxAcceleration * Time.deltaTime;
 
         velocity.x = Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxSpeedChange);
@@ -94,14 +127,20 @@ public class PlayerMovement : MonoBehaviour
 
         body.linearVelocity = velocity;
         onGround = false;
+
     }
 
 
-        //collision detection
-        void OnCollisionEnter(Collision collision)
+    //collision detection
+    void OnCollisionEnter(Collision collision)
     {
         //onGround = true;
         EvaluateCollision(collision);
+
+        if (collision.gameObject.name == "Death Plane")
+        {
+            Reset();
+        }
     }
     void OnCollisionStay(Collision collision)
     {
@@ -117,11 +156,24 @@ public class PlayerMovement : MonoBehaviour
 		}
 	}
 
+    //jump when on ground
     void Jump ()
     {
         if(onGround)
         {
             velocity.y += jumpHeight;
         }
+    }
+    
+    //reset game
+    public void Reset()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    
+    //enable cursor lock when focused
+    private void OnApplicationFocus(bool focus)
+    {
+        //cursorLock = focus;
     }
 }
