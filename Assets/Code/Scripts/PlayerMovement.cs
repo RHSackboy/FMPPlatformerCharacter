@@ -11,7 +11,9 @@ public class PlayerMovement : MonoBehaviour
     float maxSpeed = 10f;
     [SerializeField, Range(0f, 100f)]
     float maxAcceleration = 10f;
-   	[SerializeField, Range(0f, 10f)]
+    [SerializeField, Range(0f, 100f)]
+    float maxAirAcceleration = 10f;
+    [SerializeField, Range(0f, 10f)]
 	float jumpHeight = 5f;
     
     //internal variables
@@ -19,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     Vector3 velocity;
     Vector3 desiredVelocity;
     bool desiredJump;
+    [SerializeField]
     bool onGround;
     bool cursorLock = true;
 
@@ -114,7 +117,17 @@ public class PlayerMovement : MonoBehaviour
     {
 		//set rigidbody speeds 
         velocity = body.linearVelocity;
-		float maxSpeedChange = maxAcceleration * Time.deltaTime;
+        
+        float acceleration;
+        if (onGround)
+        {
+            acceleration = maxAcceleration;
+        }
+        else
+        {
+            acceleration = maxAirAcceleration;
+        }
+        float maxSpeedChange = acceleration * Time.deltaTime;
 
         velocity.x = Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxSpeedChange);
 		velocity.z = Mathf.MoveTowards(velocity.z, desiredVelocity.z, maxSpeedChange);
