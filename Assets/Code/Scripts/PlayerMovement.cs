@@ -15,7 +15,9 @@ public class PlayerMovement : MonoBehaviour
     float maxAirAcceleration = 10f;
     [SerializeField, Range(0f, 10f)]
 	float jumpHeight = 5f;
-    
+    [SerializeField, Range(0f, 90f)]
+    float maxGroundAngle = 25f;
+
     //internal variables
     [SerializeField]
     Vector3 velocity;
@@ -24,6 +26,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     bool onGround;
     bool cursorLock = true;
+    float minGroundDotProduct;
+    Vector3 contactNormal;
+
 
     //references
     Rigidbody body;
@@ -51,6 +56,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //initialise rigid body
         body = GetComponent<Rigidbody>();
+        OnValidate();
     }
 
     // Update is called once per frame
@@ -117,7 +123,7 @@ public class PlayerMovement : MonoBehaviour
     {
 		//set rigidbody speeds 
         velocity = body.linearVelocity;
-        
+
         float acceleration;
         if (onGround)
         {
@@ -165,8 +171,13 @@ public class PlayerMovement : MonoBehaviour
 	void EvaluateCollision (Collision collision) {
 		for (int i = 0; i < collision.contactCount; i++) {
 			Vector3 normal = collision.GetContact(i).normal;
-            onGround |= normal.y >= 0.9f;
-		}
+            //onGround |= normal.y >= minGroundDotProduct;
+            if (normal.y >= minGroundDotProduct)
+            {
+                onGround = true;
+                contactNormal = normal;
+            }
+        }
 	}
 
     //jump when on ground
@@ -188,5 +199,10 @@ public class PlayerMovement : MonoBehaviour
     private void OnApplicationFocus(bool focus)
     {
         //cursorLock = focus;
+    }
+
+    void OnValidate()
+    {
+        minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
     }
 }
