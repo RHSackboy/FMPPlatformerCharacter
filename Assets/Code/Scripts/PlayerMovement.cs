@@ -3,10 +3,13 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using Unity.Cinemachine;
+using UnityEditor.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
     //parameters
+    [Header("Parameters")]
     [SerializeField, Range(0f, 100f)]
     float maxSpeed = 10f;
     [SerializeField, Range(0f, 100f)]
@@ -19,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     float maxGroundAngle = 25f;
 
     //internal variables
+    [Header("Internal Variables")]
     [SerializeField]
     Vector3 velocity;
     Vector3 desiredVelocity;
@@ -31,14 +35,21 @@ public class PlayerMovement : MonoBehaviour
 
 
     //references
+
     Rigidbody body;
+    [Header("References")]
     [SerializeField]
     Transform playerInputSpace;
     Vector3 cameraRelativeMovement;
+    [SerializeField]
+    CinemachineCamera freelookCam;
+    [SerializeField]
+    ParticleSystem dustTrail;
  
     //input
     InputAction moveAction;
     InputAction jumpAction;
+    InputAction resetCameraAction;
     InputAction resetGameAction;
     InputAction unfocusAction;
 
@@ -49,6 +60,7 @@ public class PlayerMovement : MonoBehaviour
         //reference action map
         moveAction = InputSystem.actions.FindAction("Move");
         jumpAction = InputSystem.actions.FindAction("Jump");
+        resetCameraAction = InputSystem.actions.FindAction("Reset Camera");
         resetGameAction = InputSystem.actions.FindAction("Reset Game");
         unfocusAction = InputSystem.actions.FindAction("Unfocus");
     }
@@ -87,8 +99,26 @@ public class PlayerMovement : MonoBehaviour
         if(jumpAction.triggered == true)
         {
             desiredJump = true;
+
         }
 
+        //dust trail
+        if (onGround)
+        {
+
+        }
+        else
+        {
+
+        }
+
+
+
+        //reset camera
+        if (resetCameraAction.triggered == true)
+        {
+            //freelookCam.ForceCameraPosition(this.transform.position, this.transform.rotation);
+        }
 
         //reset input
         if (resetGameAction.triggered == true)
@@ -195,14 +225,16 @@ public class PlayerMovement : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     
+    void OnValidate()
+    {
+        minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
+    }
+
+
     //enable cursor lock when focused
     private void OnApplicationFocus(bool focus)
     {
         //cursorLock = focus;
     }
 
-    void OnValidate()
-    {
-        minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
-    }
 }

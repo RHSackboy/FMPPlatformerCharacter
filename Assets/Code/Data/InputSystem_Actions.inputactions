@@ -82,7 +82,16 @@
                     "name": "Sprint",
                     "type": "Button",
                     "id": "641cd816-40e6-41b4-8c3d-04687c349290",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Reset Camera",
+                    "type": "Button",
+                    "id": "a15391ea-9a26-4688-91f7-fd7ab901445f",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -516,8 +525,8 @@
                 },
                 {
                     "name": "",
-                    "id": "198f40b0-71f3-40c2-b424-62535216ce2e",
-                    "path": "",
+                    "id": "dcae1c11-c6d4-4dac-b909-6787f750fdd7",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -527,12 +536,23 @@
                 },
                 {
                     "name": "",
-                    "id": "dcae1c11-c6d4-4dac-b909-6787f750fdd7",
-                    "path": "<Keyboard>/escape",
+                    "id": "f897e637-365e-4d98-9c11-43a97e99b898",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Reset Camera",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8e49f34f-c69c-429e-a190-bddb3f12c898",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Unfocus",
+                    "action": "Reset Camera",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
