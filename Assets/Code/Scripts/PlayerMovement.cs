@@ -32,7 +32,13 @@ public class PlayerMovement : MonoBehaviour
     bool cursorLock = true;
     float minGroundDotProduct;
     Vector3 contactNormal;
-
+    [SerializeField]
+    float dustEmissionRate = 10f;
+    quaternion directionRotation;
+    quaternion leanRotation;
+    [SerializeField]
+    Vector3 rotationVelocity;
+    ParticleSystem.EmissionModule dustEmission;
 
     //references
 
@@ -45,6 +51,8 @@ public class PlayerMovement : MonoBehaviour
     CinemachineCamera freelookCam;
     [SerializeField]
     ParticleSystem dustTrail;
+    [SerializeField]
+    Transform pivotPoint;
  
     //input
     InputAction moveAction;
@@ -63,6 +71,7 @@ public class PlayerMovement : MonoBehaviour
         resetCameraAction = InputSystem.actions.FindAction("Reset Camera");
         resetGameAction = InputSystem.actions.FindAction("Reset Game");
         unfocusAction = InputSystem.actions.FindAction("Unfocus");
+        dustEmission = dustTrail.emission;
     }
     void Awake()
     {
@@ -103,13 +112,13 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //dust trail
-        if (onGround)
+        if (onGround && velocity != Vector3.zero)
         {
-
+            dustEmission.rateOverTime = dustEmissionRate;
         }
         else
         {
-
+            dustEmission.rateOverTime = 0f;
         }
 
 
@@ -176,6 +185,16 @@ public class PlayerMovement : MonoBehaviour
 
         body.linearVelocity = velocity;
         onGround = false;
+
+        
+        //look in movement direction
+        if (moveAction.ReadValue<Vector2>() != Vector2.zero)
+        {
+            directionRotation = Quaternion.LookRotation(new Vector3(velocity.x, 0, velocity.z), Vector3.up);
+        }
+
+        transform.rotation = directionRotation;
+
 
     }
 
