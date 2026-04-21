@@ -1126,12 +1126,15 @@ MonoBehaviour:
   maxSpeed: 5
   maxAcceleration: 20
   maxAirAcceleration: 20
-  jumpHeight: 5
+  jumpHeight: 7
   maxGroundAngle: 45
+  leanMultiplier: 0.05
   velocity: {x: 0, y: 0, z: 0}
+  desiredVelocity: {x: 0, y: 0, z: 0}
+  rotationVelocity: {x: 0, y: 0, z: 0}
+  jumping: 0
   onGround: 0
   dustEmissionRate: 10
-  rotationVelocity: {x: 0, y: 0, z: 0}
   playerInputSpace: {fileID: 1615137745}
   freelookCam: {fileID: 1615137744}
   dustTrail: {fileID: 1657590613}

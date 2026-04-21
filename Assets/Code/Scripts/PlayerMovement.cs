@@ -20,13 +20,20 @@ public class PlayerMovement : MonoBehaviour
 	float jumpHeight = 5f;
     [SerializeField, Range(0f, 90f)]
     float maxGroundAngle = 25f;
+    [SerializeField]
+    float leanMultiplier = 0.2f;
 
     //internal variables
     [Header("Internal Variables")]
     [SerializeField]
     Vector3 velocity;
+    [SerializeField]
     Vector3 desiredVelocity;
+    [SerializeField]
+    Vector3 rotationVelocity;
     bool desiredJump;
+    [SerializeField]
+    bool jumping;
     [SerializeField]
     bool onGround;
     bool cursorLock = true;
@@ -36,8 +43,7 @@ public class PlayerMovement : MonoBehaviour
     float dustEmissionRate = 10f;
     quaternion directionRotation;
     quaternion leanRotation;
-    [SerializeField]
-    Vector3 rotationVelocity;
+
     ParticleSystem.EmissionModule dustEmission;
 
     //references
@@ -157,6 +163,15 @@ public class PlayerMovement : MonoBehaviour
         {
             cursorLock = true;
         }
+        
+
+        //variable jumping
+        if(jumpAction.WasReleasedThisFrame() && jumping)
+        {
+            Debug.Log("Release!");
+            //add removal of fall speed here
+
+        }
     }
 	void FixedUpdate ()
     {
@@ -171,6 +186,7 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             acceleration = maxAirAcceleration;
+
         }
         float maxSpeedChange = acceleration * Time.deltaTime;
 
@@ -183,18 +199,23 @@ public class PlayerMovement : MonoBehaviour
             Jump();
         }
 
+        if(!onGround && velocity.y < 0)
+        {
+            jumping = false;
+        }
+        
+        
         body.linearVelocity = velocity;
         onGround = false;
 
-        
+
         //look in movement direction
         if (moveAction.ReadValue<Vector2>() != Vector2.zero)
         {
             directionRotation = Quaternion.LookRotation(new Vector3(velocity.x, 0, velocity.z), Vector3.up);
         }
-
+        
         transform.rotation = directionRotation;
-
 
     }
 
@@ -225,6 +246,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 onGround = true;
                 contactNormal = normal;
+                //jumping = false;
             }
         }
 	}
@@ -235,6 +257,7 @@ public class PlayerMovement : MonoBehaviour
         if(onGround)
         {
             velocity.y += jumpHeight;
+            jumping = true;
         }
     }
     
