@@ -35,6 +35,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     bool jumping;
     [SerializeField]
+    bool jumpBuffer = false;
+    [SerializeField]
+    bool jumpCutoff = false;
+    [SerializeField]
     bool onGround;
     bool cursorLock = true;
     float minGroundDotProduct;
@@ -170,8 +174,10 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.Log("Release!");
             //add removal of fall speed here
-
+            //VariableJump();
+            //jumpCutoff = true;
         }
+
     }
 	void FixedUpdate ()
     {
@@ -198,8 +204,15 @@ public class PlayerMovement : MonoBehaviour
             desiredJump = false;
             Jump();
         }
+        
+        if (jumpCutoff)
+        {
+            //jumpCutoff = false;
+            //velocity.y -= 10f;
+            //velocity.y -= Mathf.Max(velocity.y, jumpHeight / 4);
+        }
 
-        if(!onGround && velocity.y < 0)
+        if (!onGround && velocity.y < 0)
         {
             jumping = false;
         }
@@ -246,6 +259,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 onGround = true;
                 contactNormal = normal;
+
                 //jumping = false;
             }
         }
@@ -259,8 +273,17 @@ public class PlayerMovement : MonoBehaviour
             velocity.y += jumpHeight;
             jumping = true;
         }
+        else
+        {
+            //velocity.y = velocity.y / 4f;
+        }
     }
     
+    void VariableJump ()
+    {
+        //velocity.y -= 10f;
+    }
+
     //reset game
     public void Reset()
     {

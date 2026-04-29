@@ -1133,6 +1133,7 @@ MonoBehaviour:
   desiredVelocity: {x: 0, y: 0, z: 0}
   rotationVelocity: {x: 0, y: 0, z: 0}
   jumping: 0
+  jumpBuffer: 0
   onGround: 0
   dustEmissionRate: 10
   playerInputSpace: {fileID: 1615137745}
