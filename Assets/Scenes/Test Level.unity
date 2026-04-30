@@ -1128,7 +1128,7 @@ MonoBehaviour:
   maxAirAcceleration: 20
   jumpHeight: 7
   jumpBufferTime: 0.15
-  coyoteTimeTime: 0.5
+  coyoteTimeTime: 0.15
   maxGroundAngle: 45
   leanMultiplier: 0.05
   velocity: {x: 0, y: 0, z: 0}
@@ -1138,8 +1138,9 @@ MonoBehaviour:
   jumpBuffer: 0
   coyoteTime: 0
   noCoyoteTime: 0
+  coyoteTimeTrigger: 0
   onGround: 0
-  landing: 0
+  landingTrigger: 0
   dustEmissionRate: 10
   playerInputSpace: {fileID: 1615137745}
   freelookCam: {fileID: 1615137744}

@@ -35,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
     Vector3 desiredVelocity;
     [SerializeField]
     Vector3 rotationVelocity;
-    bool desiredJump;
+    bool jumpTrigger;
     [SerializeField]
     bool jumping;
     [SerializeField]
@@ -46,11 +46,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     bool noCoyoteTime;
     Timer coyoteTimeTimer;
+    [SerializeField]
+    bool coyoteTimeTrigger;
     bool jumpCutoff = false;
     [SerializeField]
     bool onGround;
     [SerializeField]
-    bool landing = false;
+    bool landingTrigger = false;
     bool cursorLock = true;
     float minGroundDotProduct;
     Vector3 contactNormal;
@@ -128,7 +130,7 @@ public class PlayerMovement : MonoBehaviour
         //jumping
         if(jumpAction.triggered == true)
         {
-            desiredJump = true;
+            jumpTrigger = true;
 
         }
 
@@ -199,6 +201,9 @@ public class PlayerMovement : MonoBehaviour
         if (onGround)
         {
             acceleration = maxAcceleration;
+            noCoyoteTime = false;
+            coyoteTime = false;
+            Timer.Cancel(coyoteTimeTimer);
         }
         else
         {
@@ -210,9 +215,9 @@ public class PlayerMovement : MonoBehaviour
         velocity.x = Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxSpeedChange);
 		velocity.z = Mathf.MoveTowards(velocity.z, desiredVelocity.z, maxSpeedChange);
 
-        if (desiredJump)
+        if (jumpTrigger)
         {
-            desiredJump = false;
+            jumpTrigger = false;
             Jump();
         }
         
@@ -225,20 +230,34 @@ public class PlayerMovement : MonoBehaviour
 
         if(jumpBuffer && onGround)
         {
-            Jump();
+            jumpTrigger = true;
         }
 
-        if (landing)
+        if (landingTrigger)
         {
-            landing = false;
+            landingTrigger = false;
         }
 
         if (!onGround && velocity.y < 0)
         {
             jumping = false;
+
+            if(!noCoyoteTime)
+            {
+                coyoteTimeTrigger = true;
+            }
+            else
+            {
+                coyoteTimeTrigger = false;
+            }
         }
 
-        
+        if(coyoteTimeTrigger)
+        {
+            coyoteTimeTrigger = false;
+            coyoteTime = true;
+            coyoteTimeTimer = Timer.Register(coyoteTimeTime, () => coyoteTime = false);
+        }
         
         body.linearVelocity = velocity;
         onGround = false;
@@ -289,12 +308,14 @@ public class PlayerMovement : MonoBehaviour
     //jump when on ground
     void Jump ()
     {
-        if(onGround)
+        if(onGround || coyoteTime)
         {
             jumpBuffer = false;
+            Timer.Cancel(coyoteTimeTimer);
+            coyoteTime = false;
             jumping = true;
             velocity.y += jumpHeight;
-            noCoyoteTime = true;
+            Timer.Register(0.05f, () => noCoyoteTime = true);
         }
         else
         {
