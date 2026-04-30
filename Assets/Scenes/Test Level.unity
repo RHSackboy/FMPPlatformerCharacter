@@ -985,7 +985,7 @@ TrailRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 744479081}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1127,6 +1127,8 @@ MonoBehaviour:
   maxAcceleration: 20
   maxAirAcceleration: 20
   jumpHeight: 7
+  jumpBufferTime: 0.15
+  coyoteTimeTime: 0.5
   maxGroundAngle: 45
   leanMultiplier: 0.05
   velocity: {x: 0, y: 0, z: 0}
@@ -1134,7 +1136,10 @@ MonoBehaviour:
   rotationVelocity: {x: 0, y: 0, z: 0}
   jumping: 0
   jumpBuffer: 0
+  coyoteTime: 0
+  noCoyoteTime: 0
   onGround: 0
+  landing: 0
   dustEmissionRate: 10
   playerInputSpace: {fileID: 1615137745}
   freelookCam: {fileID: 1615137744}
@@ -1913,7 +1918,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1657590611
 Transform:
   m_ObjectHideFlags: 0

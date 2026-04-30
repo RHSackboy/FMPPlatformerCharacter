@@ -18,6 +18,10 @@ public class PlayerMovement : MonoBehaviour
     float maxAirAcceleration = 10f;
     [SerializeField, Range(0f, 10f)]
 	float jumpHeight = 5f;
+    [SerializeField, Range(0f,1f)]
+    float jumpBufferTime = 0.5f;
+    [SerializeField, Range(0f,1f)]
+    float coyoteTimeTime = 0.5f;
     [SerializeField, Range(0f, 90f)]
     float maxGroundAngle = 25f;
     [SerializeField]
@@ -36,10 +40,17 @@ public class PlayerMovement : MonoBehaviour
     bool jumping;
     [SerializeField]
     bool jumpBuffer = false;
+    Timer jumpBufferTimer;
     [SerializeField]
+    bool coyoteTime;
+    [SerializeField]
+    bool noCoyoteTime;
+    Timer coyoteTimeTimer;
     bool jumpCutoff = false;
     [SerializeField]
     bool onGround;
+    [SerializeField]
+    bool landing = false;
     bool cursorLock = true;
     float minGroundDotProduct;
     Vector3 contactNormal;
@@ -207,15 +218,26 @@ public class PlayerMovement : MonoBehaviour
         
         if (jumpCutoff)
         {
-            //jumpCutoff = false;
+            jumpCutoff = false;
             //velocity.y -= 10f;
-            //velocity.y -= Mathf.Max(velocity.y, jumpHeight / 4);
+            velocity.y -= Mathf.Max(velocity.y, jumpHeight / 4);
+        }
+
+        if(jumpBuffer && onGround)
+        {
+            Jump();
+        }
+
+        if (landing)
+        {
+            landing = false;
         }
 
         if (!onGround && velocity.y < 0)
         {
             jumping = false;
         }
+
         
         
         body.linearVelocity = velocity;
@@ -238,7 +260,6 @@ public class PlayerMovement : MonoBehaviour
     {
         //onGround = true;
         EvaluateCollision(collision);
-
         if (collision.gameObject.name == "Death Plane")
         {
             Reset();
@@ -270,12 +291,16 @@ public class PlayerMovement : MonoBehaviour
     {
         if(onGround)
         {
-            velocity.y += jumpHeight;
+            jumpBuffer = false;
             jumping = true;
+            velocity.y += jumpHeight;
+            noCoyoteTime = true;
         }
         else
         {
-            //velocity.y = velocity.y / 4f;
+            jumpBuffer = true;
+            Timer.Cancel(jumpBufferTimer);
+            jumpBufferTimer = Timer.Register(jumpBufferTime, () => jumpBuffer = false);
         }
     }
     
