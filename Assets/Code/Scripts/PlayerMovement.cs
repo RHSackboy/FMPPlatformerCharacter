@@ -27,8 +27,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     float leanMultiplier = 0.2f;
 
-    //internal variables
-    [Header("Internal Variables")]
+    //states
+    [Header("States")]
     [SerializeField]
     Vector3 velocity;
     [SerializeField]
@@ -60,22 +60,28 @@ public class PlayerMovement : MonoBehaviour
     float dustEmissionRate = 10f;
     quaternion directionRotation;
     quaternion leanRotation;
-
     ParticleSystem.EmissionModule dustEmission;
+    [SerializeField]
+    bool recentreing;
+    [SerializeField]
+    float camFollowY;
 
     //references
-
     Rigidbody body;
     [Header("References")]
     [SerializeField]
     Transform playerInputSpace;
     Vector3 cameraRelativeMovement;
     [SerializeField]
-    CinemachineCamera freelookCam;
+    CinemachineOrbitalFollow orbitalFollow;
+    [SerializeField]
+    CinemachineInputAxisController inputAxisController;
     [SerializeField]
     ParticleSystem dustTrail;
     [SerializeField]
     Transform pivotPoint;
+    [SerializeField]
+    Transform playerCamFollow;
  
     //input
     InputAction moveAction;
@@ -112,26 +118,27 @@ public class PlayerMovement : MonoBehaviour
         playerInput.y = moveAction.ReadValue<Vector2>().y;
         playerInput = Vector2.ClampMagnitude(playerInput, 1f);
 
-        //camera vectors (not used right now)
-        //Vector3 camForward = transform.InverseTransformVector(Camera.main.transform.forward);
-        //Vector3 camRight = transform.InverseTransformVector(Camera.main.transform.right);
-
-        //Vector3 rightRelativeVerticalInput = playerInput.x * camRight;
-        //Vector3 forwardRelativeVerticalInput = playerInput.y * camForward;
-
-        //cameraRelativeMovement = (forwardRelativeVerticalInput + rightRelativeVerticalInput);
-
-        //desiredVelocity = new Vector3(playerInput.x, 0f, playerInput.y) * maxSpeed;
-
         //need to fix relative movement
         desiredVelocity = playerInputSpace.TransformDirection(playerInput.x, 0f, playerInput.y) * maxSpeed;
 
-
-        //jumping
+        //jump input
         if(jumpAction.triggered == true)
         {
             jumpTrigger = true;
 
+        }
+        
+        //camera reset input
+        if (resetCameraAction.triggered == true && !recentreing)
+        {
+            recentreing = true;
+            Timer.Register(0.2f, () => recentreing = false);
+        }
+
+        //reset game input
+        if (resetGameAction.triggered == true)
+        {
+            Reset();
         }
 
         //dust trail
@@ -143,21 +150,6 @@ public class PlayerMovement : MonoBehaviour
         {
             dustEmission.rateOverTime = 0f;
         }
-
-
-
-        //reset camera
-        if (resetCameraAction.triggered == true)
-        {
-            //freelookCam.ForceCameraPosition(this.transform.position, this.transform.rotation);
-        }
-
-        //reset input
-        if (resetGameAction.triggered == true)
-        {
-            Reset();
-        }
-
 
         //cursor lock
         if (cursorLock)
@@ -191,6 +183,14 @@ public class PlayerMovement : MonoBehaviour
             //jumpCutoff = true;
         }
 
+        playerCamFollow.position = new Vector3 (gameObject.transform.position.x, camFollowY, gameObject.transform.position.z);
+        playerCamFollow.rotation = gameObject.transform.rotation;
+
+        if(onGround)
+        {
+            camFollowY = gameObject.transform.position.y;
+        }
+
     }
 	void FixedUpdate ()
     {
@@ -198,6 +198,7 @@ public class PlayerMovement : MonoBehaviour
         velocity = body.linearVelocity;
 
         float acceleration;
+        
         if (onGround)
         {
             acceleration = maxAcceleration;
@@ -210,11 +211,13 @@ public class PlayerMovement : MonoBehaviour
             acceleration = maxAirAcceleration;
 
         }
-        float maxSpeedChange = acceleration * Time.deltaTime;
+       
+       float maxSpeedChange = acceleration * Time.deltaTime;
 
         velocity.x = Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxSpeedChange);
 		velocity.z = Mathf.MoveTowards(velocity.z, desiredVelocity.z, maxSpeedChange);
 
+        //jumping
         if (jumpTrigger)
         {
             jumpTrigger = false;
@@ -228,6 +231,7 @@ public class PlayerMovement : MonoBehaviour
             velocity.y -= Mathf.Max(velocity.y, jumpHeight / 4);
         }
 
+        //jump buffering
         if(jumpBuffer && onGround)
         {
             jumpTrigger = true;
@@ -238,6 +242,7 @@ public class PlayerMovement : MonoBehaviour
             landingTrigger = false;
         }
 
+        //coyote time 
         if (!onGround && velocity.y < 0)
         {
             jumping = false;
@@ -251,17 +256,30 @@ public class PlayerMovement : MonoBehaviour
                 coyoteTimeTrigger = false;
             }
         }
-
+        
         if(coyoteTimeTrigger)
         {
             coyoteTimeTrigger = false;
             coyoteTime = true;
             coyoteTimeTimer = Timer.Register(coyoteTimeTime, () => coyoteTime = false);
         }
-        
+
+        //camera reset
+        if(recentreing)
+        {
+            inputAxisController.enabled = false;
+            orbitalFollow.HorizontalAxis.Recentering.Enabled = true;
+            orbitalFollow.VerticalAxis.Recentering.Enabled = true;
+        }
+        else
+        {
+            inputAxisController.enabled = true;
+            orbitalFollow.HorizontalAxis.Recentering.Enabled = false;
+            orbitalFollow.VerticalAxis.Recentering.Enabled = false;
+        }
+
         body.linearVelocity = velocity;
         onGround = false;
-
 
         //look in movement direction
         if (moveAction.ReadValue<Vector2>() != Vector2.zero)
