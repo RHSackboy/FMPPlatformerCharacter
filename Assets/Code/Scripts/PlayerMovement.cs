@@ -188,7 +188,7 @@ public class PlayerMovement : MonoBehaviour
 
         if(onGround)
         {
-            camFollowY = gameObject.transform.position.y;
+            camFollowY = Mathf.Lerp(camFollowY, gameObject.transform.position.y, 0.01f);
         }
 
     }
@@ -365,5 +365,11 @@ public class PlayerMovement : MonoBehaviour
     {
         //cursorLock = focus;
     }
+
+    void WithinScreenbounds(Transform transform)
+    {
+
+    }
+
 
 }
