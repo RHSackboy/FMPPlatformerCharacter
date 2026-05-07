@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField, Range(0f, 90f)]
     float maxGroundAngle = 25f;
     [SerializeField]
-    float leanMultiplier = 0.2f;
+    float maxLeanAngle;
 
     //states
     [Header("States")]
@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     Vector3 desiredVelocity;
     [SerializeField]
-    Vector3 rotationVelocity;
+    Vector3 angularVelocity;
     bool jumpTrigger;
     [SerializeField]
     bool jumping;
@@ -65,6 +65,7 @@ public class PlayerMovement : MonoBehaviour
     bool recentreing;
     [SerializeField]
     float camFollowY;
+    Vector3 rotationLast;
 
     //references
     Rigidbody body;
@@ -191,11 +192,13 @@ public class PlayerMovement : MonoBehaviour
             camFollowY = Mathf.Lerp(camFollowY, gameObject.transform.position.y, 0.01f);
         }
 
+
     }
 	void FixedUpdate ()
     {
 		//set rigidbody speeds 
         velocity = body.linearVelocity;
+
 
         float acceleration;
         
@@ -278,17 +281,26 @@ public class PlayerMovement : MonoBehaviour
             orbitalFollow.VerticalAxis.Recentering.Enabled = false;
         }
 
+
         body.linearVelocity = velocity;
         onGround = false;
+
 
         //look in movement direction
         if (moveAction.ReadValue<Vector2>() != Vector2.zero)
         {
             directionRotation = Quaternion.LookRotation(new Vector3(velocity.x, 0, velocity.z), Vector3.up);
         }
-        
         transform.rotation = directionRotation;
+        
+        //calculate angular velocity
+        angularVelocity = transform.rotation.eulerAngles - rotationLast;
+        rotationLast = transform.rotation.eulerAngles;
 
+        //leaning
+        //add multiplier clamp lerp 
+        float leaningValue = -angularVelocity.y * 2f;
+        pivotPoint.localRotation = Quaternion.Euler(0, 0, leaningValue);
     }
 
 
@@ -370,6 +382,5 @@ public class PlayerMovement : MonoBehaviour
     {
 
     }
-
 
 }
