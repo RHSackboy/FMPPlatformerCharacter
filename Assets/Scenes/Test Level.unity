@@ -1558,11 +1558,13 @@ MonoBehaviour:
   maxSpeed: 5
   maxAcceleration: 20
   maxAirAcceleration: 20
-  jumpHeight: 6
+  jumpHeight: 1.75
   jumpBufferTime: 0.2
   coyoteTimeTime: 0.15
   maxGroundAngle: 45
   maxLeanAngle: 0.2
+  frameRateTarget: 60
+  camFollowYLerpValue: 0.03
   velocity: {x: 0, y: 0, z: 0}
   desiredVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
