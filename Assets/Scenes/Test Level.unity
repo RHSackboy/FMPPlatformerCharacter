@@ -1578,6 +1578,9 @@ MonoBehaviour:
   dustEmissionRate: 10
   recentreing: 0
   camFollowY: 0
+  leaningMultiplier: 2.5
+  leaningMax: 30
+  leaningFilterSmoothing: 0.1
   playerInputSpace: {fileID: 1615137745}
   orbitalFollow: {fileID: 1615137743}
   inputAxisController: {fileID: 1615137740}

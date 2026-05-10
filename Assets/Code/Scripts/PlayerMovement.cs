@@ -50,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
     bool coyoteTime;
     [SerializeField]
     bool noCoyoteTime;
+    float noCoyoteTimeDelay = 0.05f;
     Timer coyoteTimeTimer;
     [SerializeField]
     bool coyoteTimeTrigger;
@@ -67,12 +68,22 @@ public class PlayerMovement : MonoBehaviour
     ParticleSystem.EmissionModule dustEmission;
     [SerializeField]
     bool recentreing;
+    float recentreTime = 0.2f;
     [SerializeField]
     float camFollowY;
     Vector3 rotationVelocity;
     Vector3 rotationLast;
     float acceleration;
     float maxSpeedChange;
+    [SerializeField]
+    float leaningMultiplier = 1f;
+    [SerializeField]
+    float leaningMax = 20f;
+    [SerializeField]
+    float leaningFilterSmoothing = 0.1f;
+    float lowPassFilterAverage;
+    float lowPassFilterPrevious;
+
 
     //references
     Rigidbody body;
@@ -145,20 +156,8 @@ public class PlayerMovement : MonoBehaviour
             contactNormal = Vector3.up;
         }
 
-        //jumping
-        if (jumpTrigger)
-        {
-            jumpTrigger = false;
-            Jump();
-        }
-
-        //jump buffering
-        if(jumpBuffer && onGround)
-        {
-            jumpTrigger = true;
-        }
-
         AdjustVelocity();
+        JumpTriggers();
         CoyoteTime();
         CameraReset();
         LookRotation();  
@@ -172,7 +171,6 @@ public class PlayerMovement : MonoBehaviour
     //collision detection
     void OnCollisionEnter(Collision collision)
     {
-        //onGround = true;
         EvaluateCollision(collision);
         if (collision.gameObject.name == "Death Plane")
         {
@@ -182,7 +180,6 @@ public class PlayerMovement : MonoBehaviour
 
     void OnCollisionStay(Collision collision)
     {
-        //onGround = true;
         EvaluateCollision(collision);
     }
 
@@ -249,7 +246,7 @@ public class PlayerMovement : MonoBehaviour
         if (resetCameraAction.triggered == true && !recentreing)
         {
             recentreing = true;
-            Timer.Register(0.2f, () => recentreing = false);
+            Timer.Register(recentreTime, () => recentreing = false);
         }
 
         //reset game input
@@ -275,17 +272,31 @@ public class PlayerMovement : MonoBehaviour
                 jumpSpeed = Mathf.Max(jumpSpeed - velocity.y, 0f);
 			}
             
-            //velocity.y += jumpSpeed;
             //velocity += contactNormal * jumpSpeed;
             velocity += Vector3.up * jumpSpeed;
             
-            Timer.Register(0.05f, () => noCoyoteTime = true);
+            Timer.Register(noCoyoteTimeDelay, () => noCoyoteTime = true);
         }
         else
         {
             jumpBuffer = true;
             Timer.Cancel(jumpBufferTimer);
             jumpBufferTimer = Timer.Register(jumpBufferTime, () => jumpBuffer = false);
+        }
+    }
+
+    void JumpTriggers()
+    {
+        if (jumpTrigger)
+        {
+            jumpTrigger = false;
+            Jump();
+        }
+
+        //jump buffering
+        if(jumpBuffer && onGround)
+        {
+            jumpTrigger = true;
         }
     }
 
@@ -333,8 +344,24 @@ public class PlayerMovement : MonoBehaviour
         rotationLast = transform.rotation.eulerAngles;
         
         //leaning
-        float leaningValue = -angularVelocity.y;
-        //pivotPoint.localRotation = Quaternion.Euler(0, 0, leaningValue);
+        float leaningValue;
+
+        if(onGround)
+        {
+            leaningValue = LowPassFilter(Mathf.Clamp(-angularVelocity.y * leaningMultiplier, -leaningMax, leaningMax), leaningFilterSmoothing);
+        }
+        else
+        {
+            leaningValue = Mathf.MoveTowards(pivotPoint.localRotation.z, 0f, maxSpeedChange);
+        }
+        pivotPoint.localRotation = Quaternion.Euler(0, 0, leaningValue);
+    }
+
+    float LowPassFilter(float input, float smoothingFactor)
+    {
+        lowPassFilterAverage = smoothingFactor * input + (1 - smoothingFactor) * lowPassFilterPrevious;
+        lowPassFilterPrevious = lowPassFilterAverage;
+        return lowPassFilterAverage;
     }
 
     void DustTrail()
