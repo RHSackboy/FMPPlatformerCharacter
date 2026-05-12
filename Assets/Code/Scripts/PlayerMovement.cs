@@ -31,6 +31,10 @@ public class PlayerMovement : MonoBehaviour
     int frameRateTarget = 60;
     [SerializeField]
     float camFollowYLerpValue;
+    [SerializeField]
+    float defaultGravityScale = 2f;
+    [SerializeField]
+    float jumpGravityScale = 1f;
 
     //states
     [Header("States")]
@@ -83,7 +87,10 @@ public class PlayerMovement : MonoBehaviour
     float leaningFilterSmoothing = 0.1f;
     float lowPassFilterAverage;
     float lowPassFilterPrevious;
-
+    [SerializeField]
+    float gravityScale = 2f;
+    [SerializeField]
+    bool buttonheld;
 
     //references
     Rigidbody body;
@@ -116,6 +123,7 @@ public class PlayerMovement : MonoBehaviour
         Application.targetFrameRate = frameRateTarget;
         ReferenceActionMap();
         dustEmission = dustTrail.emission;
+        body.useGravity = false;
     }
     void Awake()
     {
@@ -132,12 +140,7 @@ public class PlayerMovement : MonoBehaviour
         CameraY();
         CursorLock();
         DustTrail();
-
-        //variable jumping
-        if(jumpAction.WasReleasedThisFrame() && jumping)
-        {
-            Debug.Log("Release!");
-        }
+        VariableJumpHeight();
 
     }
 	void FixedUpdate ()
@@ -165,6 +168,9 @@ public class PlayerMovement : MonoBehaviour
 
         body.linearVelocity = velocity;
         onGround = false;
+
+        //customisable gravity
+        body.AddForce(Physics.gravity * gravityScale, ForceMode.Acceleration);
 
     }
 
@@ -264,8 +270,9 @@ public class PlayerMovement : MonoBehaviour
             Timer.Cancel(coyoteTimeTimer);
             coyoteTime = false;
             jumping = true;
+            //gravityScale = jumpGravityScale;
             
-            float jumpSpeed = Mathf.Sqrt(-2f * Physics.gravity.y * jumpHeight);
+            float jumpSpeed = Mathf.Sqrt(-2f * (Physics.gravity.y * gravityScale) * jumpHeight);
             float alignedSpeed = Vector3.Dot(velocity, contactNormal);
             if (velocity.y > 0f)
             {
@@ -300,9 +307,23 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    void VariableJumpHeight()
+    {
+        if(jumpAction.IsPressed() && jumping)
+        {
+            gravityScale = jumpGravityScale;
+            buttonheld = true;
+        }
+        else
+        {
+            gravityScale = defaultGravityScale;
+            buttonheld = false;
+        }
+    }
+
     void CoyoteTime()
     {
-        if (!onGround && velocity.y < 0)
+        if (!onGround && velocity.y <= 0)
         {
             jumping = false;
 
