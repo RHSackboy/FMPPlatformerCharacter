@@ -44,6 +44,8 @@ public class PlayerMovement : MonoBehaviour
     Vector3 desiredVelocity;
     [SerializeField]
     Vector3 angularVelocity;
+    [SerializeField]
+    Vector3 screenPosition;
     bool jumpTrigger;
     [SerializeField]
     bool jumping;
@@ -90,7 +92,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     float gravityScale = 2f;
     [SerializeField]
-    bool buttonheld;
+    bool playerVisible;
+    [SerializeField]
+    bool camYUnlock;
 
     //references
     Rigidbody body;
@@ -171,6 +175,8 @@ public class PlayerMovement : MonoBehaviour
 
         //customisable gravity
         body.AddForce(Physics.gravity * gravityScale, ForceMode.Acceleration);
+
+        screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
 
     }
 
@@ -270,8 +276,7 @@ public class PlayerMovement : MonoBehaviour
             Timer.Cancel(coyoteTimeTimer);
             coyoteTime = false;
             jumping = true;
-            //gravityScale = jumpGravityScale;
-            
+
             float jumpSpeed = Mathf.Sqrt(-2f * (Physics.gravity.y * gravityScale) * jumpHeight);
             float alignedSpeed = Vector3.Dot(velocity, contactNormal);
             if (velocity.y > 0f)
@@ -281,8 +286,10 @@ public class PlayerMovement : MonoBehaviour
             
             //velocity += contactNormal * jumpSpeed;
             velocity += Vector3.up * jumpSpeed;
-            
+
             Timer.Register(noCoyoteTimeDelay, () => noCoyoteTime = true);
+
+            gravityScale = jumpGravityScale;
         }
         else
         {
@@ -312,12 +319,10 @@ public class PlayerMovement : MonoBehaviour
         if(jumpAction.IsPressed() && jumping)
         {
             gravityScale = jumpGravityScale;
-            buttonheld = true;
         }
         else
         {
             gravityScale = defaultGravityScale;
-            buttonheld = false;
         }
     }
 
@@ -325,7 +330,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!onGround && velocity.y <= 0)
         {
-            jumping = false;
+            if (jumping)
+            {
+                jumping = false;
+            }
 
             if(!noCoyoteTime)
             {
@@ -403,10 +411,21 @@ public class PlayerMovement : MonoBehaviour
         playerCamFollow.position = new Vector3 (gameObject.transform.position.x, Mathf.Lerp(playerCamFollow.position.y, camFollowY, camFollowYLerpValue), gameObject.transform.position.z);
         playerCamFollow.rotation = gameObject.transform.rotation;
 
-        if(onGround)
+        if(onGround || camYUnlock)
         {
             camFollowY = gameObject.transform.position.y;
         }
+        
+        if (onGround)
+        {
+            camYUnlock = false;
+        }
+
+        if (screenPosition.y < 0f || screenPosition.y >= Screen.height)
+        {
+            camYUnlock = true;
+        }
+
     }
 
     void CameraReset()
