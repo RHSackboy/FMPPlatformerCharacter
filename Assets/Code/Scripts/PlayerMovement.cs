@@ -112,6 +112,8 @@ public class PlayerMovement : MonoBehaviour
     Transform pivotPoint;
     [SerializeField]
     Transform playerCamFollow;
+    [SerializeField]
+    GameObject Cam;
  
     //input
     InputAction moveAction;
@@ -241,13 +243,13 @@ public class PlayerMovement : MonoBehaviour
         playerInput.x = moveAction.ReadValue<Vector2>().x;
         playerInput.y = moveAction.ReadValue<Vector2>().y;
         playerInput = Vector2.ClampMagnitude(playerInput, 1f);
+        
+        //camera relative movement
+        playerInputSpace.position = new Vector3 (Cam.transform.position.x, 0f, Cam.transform.position.z);
+        playerInputSpace.eulerAngles = new Vector3(0f, Cam.transform.eulerAngles.y, Cam.transform.eulerAngles.z);
 
-        //need to fix relative movement
         desiredVelocity = playerInputSpace.TransformDirection(playerInput.x, 0f, playerInput.y) * maxSpeed;
         
-        //no relative movement
-        //desiredVelocity = new Vector3(playerInput.x, 0f, playerInput.y) * maxSpeed;
-
         //jump input
         if(jumpAction.triggered == true)
         {
@@ -360,7 +362,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (moveAction.ReadValue<Vector2>() != Vector2.zero)
         {
-            directionRotation = Quaternion.LookRotation(new Vector3(rotationVelocity.x, 0, rotationVelocity.z), Vector3.up);
+            directionRotation = Quaternion.LookRotation(new Vector3(rotationVelocity.x, 0f, rotationVelocity.z), Vector3.up);
         }
         transform.rotation = directionRotation;
     }
