@@ -1,0 +1,71 @@
+.button {
+    -unity-font-definition: url("project://database/Assets/Media/Fonts/FOT-Rodin%20Pro%20EB.otf?fileID=12800000&guid=b8ef418dc3ae6432aac3015ec47e72ac&type=3#FOT-Rodin Pro EB");
+    font-size: 45px;
+    border-top-left-radius: 93px;
+    border-top-right-radius: 93px;
+    border-bottom-right-radius: 93px;
+    border-bottom-left-radius: 93px;
+    margin-top: 30px;
+    margin-left: 60px;
+    opacity: 1;
+    width: 550px;
+    height: 550px;
+    background-color: rgba(255, 250, 221, 0);
+    -unity-background-image-tint-color: rgb(255, 252, 233);
+    background-position-x: center 0;
+    border-left-color: rgb(255, 252, 233);
+    border-right-color: rgb(255, 252, 233);
+    border-top-color: rgb(255, 252, 233);
+    border-bottom-color: rgb(255, 252, 233);
+    border-top-width: 12px;
+    border-right-width: 12px;
+    border-bottom-width: 12px;
+    border-left-width: 12px;
+    color: rgb(255, 251, 232);
+    flex-shrink: 0;
+    flex-basis: 165px;
+    transition-duration: 0.1s;
+    -unity-text-align: middle-center;
+    align-self: flex-start;
+}
+
+.button:hover {
+    -unity-font-definition: url("project://database/Assets/Media/Fonts/FOT-Rodin%20Pro%20EB.otf?fileID=12800000&guid=b8ef418dc3ae6432aac3015ec47e72ac&type=3#FOT-Rodin Pro EB");
+    font-size: 45px;
+    border-top-left-radius: 93px;
+    border-top-right-radius: 93px;
+    border-bottom-right-radius: 93px;
+    border-bottom-left-radius: 93px;
+    margin-top: 30px;
+    margin-left: 60px;
+    opacity: 1;
+    width: 570px;
+    height: 170px;
+    align-self: flex-start;
+    background-color: rgb(255, 252, 233);
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    background-position-x: center 0;
+    border-left-color: rgb(255, 252, 233);
+    border-right-color: rgb(255, 252, 233);
+    border-top-color: rgb(255, 252, 233);
+    border-bottom-color: rgb(255, 252, 233);
+    border-top-width: 12px;
+    border-right-width: 12px;
+    border-bottom-width: 12px;
+    border-left-width: 12px;
+    color: rgb(0, 0, 0);
+    flex-shrink: 0;
+    flex-direction: column;
+    flex-basis: 165px;
+    transition-duration: 0.1s;
+    -unity-text-align: middle-center;
+}
+
+.slider {
+    width: 550px;
+    height: 50px;
+    -unity-font-definition: url("project://database/Assets/Media/Fonts/FOT-Rodin%20Pro%20EB.otf?fileID=12800000&guid=b8ef418dc3ae6432aac3015ec47e72ac&type=3#FOT-Rodin Pro EB");
+    color: rgb(255, 250, 221);
+    font-size: 30px;
+    -unity-text-align: middle-left;
+}

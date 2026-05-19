@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 using Unity.Cinemachine;
 using UnityEditor.UI;
 using Unity.VisualScripting;
+using UnityEngine.Android;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -27,8 +28,6 @@ public class PlayerMovement : MonoBehaviour
     float maxGroundAngle = 25f;
     [SerializeField]
     float maxLeanAngle;
-    [SerializeField]
-    int frameRateTarget = 60;
     [SerializeField]
     float camFollowYLerpValue;
     [SerializeField]
@@ -60,12 +59,11 @@ public class PlayerMovement : MonoBehaviour
     Timer coyoteTimeTimer;
     [SerializeField]
     bool coyoteTimeTrigger;
-    bool jumpCutoff = false;
     [SerializeField]
     bool onGround;
     [SerializeField]
     bool landingTrigger = false;
-    bool cursorLock = true;
+    //bool cursorLock = true;
     float minGroundDotProduct;
     Vector3 contactNormal;
     [SerializeField]
@@ -119,14 +117,11 @@ public class PlayerMovement : MonoBehaviour
     InputAction moveAction;
     InputAction jumpAction;
     InputAction resetCameraAction;
-    InputAction resetGameAction;
-    InputAction unfocusAction;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Application.targetFrameRate = frameRateTarget;
         ReferenceActionMap();
         dustEmission = dustTrail.emission;
         body.useGravity = false;
@@ -144,7 +139,6 @@ public class PlayerMovement : MonoBehaviour
         
         Inputs();
         CameraY();
-        CursorLock();
         DustTrail();
         VariableJumpHeight();
 
@@ -188,7 +182,7 @@ public class PlayerMovement : MonoBehaviour
         EvaluateCollision(collision);
         if (collision.gameObject.name == "Death Plane")
         {
-            ResetGame();
+            gameObject.GetComponent<UserInt>().ResetGame();
         }
     }
 
@@ -263,11 +257,6 @@ public class PlayerMovement : MonoBehaviour
             Timer.Register(recentreTime, () => recentreing = false);
         }
 
-        //reset game input
-        if (resetGameAction.triggered == true)
-        {
-            ResetGame();
-        }
     }
 
     void Jump ()
@@ -447,42 +436,11 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void CursorLock()
-    {
-        if (cursorLock)
-        {
-            UnityEngine.Cursor.lockState = CursorLockMode.Locked;
-            UnityEngine.Cursor.visible = false;
-        }
-        else
-        {
-            UnityEngine.Cursor.lockState = CursorLockMode.None;
-            UnityEngine.Cursor.visible = true;
-        }
-
-        if (unfocusAction.triggered == true)
-        {
-            cursorLock = false;
-        }
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            cursorLock = true;
-        }
-    }
-
-    void ResetGame()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-    
     void ReferenceActionMap()
     {
         moveAction = InputSystem.actions.FindAction("Move");
         jumpAction = InputSystem.actions.FindAction("Jump");
         resetCameraAction = InputSystem.actions.FindAction("Reset Camera");
-        resetGameAction = InputSystem.actions.FindAction("Reset Game");
-        unfocusAction = InputSystem.actions.FindAction("Unfocus");
     }
 
 }

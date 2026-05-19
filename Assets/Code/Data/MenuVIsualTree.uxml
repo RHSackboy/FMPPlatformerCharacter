@@ -1,0 +1,17 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Code/Data/MenuStyle.uss?fileID=7433441132597879392&amp;guid=7c5429cb1d57748eebc0e4ce793012f9&amp;type=3#MenuStyle" />
+    <ui:VisualElement name="MainMenu" style="flex-grow: 1; flex-direction: row; background-color: rgba(0, 0, 0, 0.52);">
+        <ui:VisualElement name="Navigation" style="flex-grow: 1; opacity: 1; align-self: flex-start; flex-direction: column; align-items: flex-start; justify-content: center; overflow: visible; width: 623px; height: 1080px;">
+            <ui:VisualElement name="Buffer" style="flex-grow: 1; width: auto; bottom: auto; height: auto; max-height: 0; margin-bottom: 125px;" />
+            <ui:Button name="Map" text="Map" class="button" />
+            <ui:Button text="Settings" name="Settings" class="button" />
+            <ui:Button text="Reset" name="Reset" class="button" />
+            <ui:Button text="Quit" name="Quit" class="button" />
+            <ui:Label text="FMP Ver 1.0.0" style="color: rgb(255, 251, 232); -unity-font-definition: url(&quot;project://database/Assets/Media/Fonts/FOT-Rodin%20Pro%20EB.otf?fileID=12800000&amp;guid=b8ef418dc3ae6432aac3015ec47e72ac&amp;type=3#FOT-Rodin Pro EB&quot;); font-size: 32px; margin-top: 90px; margin-left: 60px; opacity: 0.5;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Settings" style="flex-grow: 1; align-items: flex-start; justify-content: center;">
+            <ui:Slider label="Camera Sensitivity" value="0" high-value="100" show-input-field="false" inverted="false" class="slider" />
+            <ui:DropdownField label="Target Frame Rate" choices="30,40,60,120" tabindex="0" index="2" class="slider" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
