@@ -15,10 +15,13 @@ public class UserInt : MonoBehaviour
     InputAction pauseGameAction;    
     public bool cursorLock = true;
     public bool paused = false;
+    public bool mapOrSettings = true;
     int frameRateTarget = 60;
     [SerializeField]
     UIDocument Menu;
     VisualElement mainMenu;
+    VisualElement MapMenu;
+    VisualElement SettingsMenu;
     Button resetButton;
     Button quitButton;
     
@@ -28,9 +31,11 @@ public class UserInt : MonoBehaviour
         Application.targetFrameRate = frameRateTarget;
         unfocusAction = InputSystem.actions.FindAction("Unfocus");
         pauseGameAction = InputSystem.actions.FindAction("Pause Game");
-        
-        
+
+
         mainMenu = Menu.rootVisualElement.Q<VisualElement>("MainMenu");
+        MapMenu = Menu.rootVisualElement.Q<VisualElement>("MapMenu");
+        SettingsMenu = Menu.rootVisualElement.Q<VisualElement>("SettingsMenu");
         resetButton = Menu.rootVisualElement.Q<Button>("Reset");
         quitButton = Menu.rootVisualElement.Q<Button>("Quit");
         resetButton.clicked += ResetGame;
@@ -84,6 +89,7 @@ public class UserInt : MonoBehaviour
             mainMenu.visible = false;
             //Menu.enabled = false;
             paused = false;
+
         }
         else
         {
@@ -91,6 +97,7 @@ public class UserInt : MonoBehaviour
             mainMenu.visible = true;
             //Menu.enabled = true;
             paused = true;
+
         }
     }
 
@@ -105,6 +112,17 @@ public class UserInt : MonoBehaviour
         Application.Quit();
         Debug.Log("Quit");
     }
+
+    public void SetMapMenu()
+    {
+
+    }
+
+    public void SetSettingsMenu()
+    {
+
+    }
+
     
 }
 

@@ -9,9 +9,25 @@
             <ui:Button text="Quit" name="Quit" class="button" />
             <ui:Label text="FMP Ver 1.0.0" style="color: rgb(255, 251, 232); -unity-font-definition: url(&quot;project://database/Assets/Media/Fonts/FOT-Rodin%20Pro%20EB.otf?fileID=12800000&amp;guid=b8ef418dc3ae6432aac3015ec47e72ac&amp;type=3#FOT-Rodin Pro EB&quot;); font-size: 32px; margin-top: 90px; margin-left: 60px; opacity: 0.5;" />
         </ui:VisualElement>
-        <ui:VisualElement name="Settings" style="flex-grow: 1; align-items: flex-start; justify-content: center;">
-            <ui:Slider label="Camera Sensitivity" value="0" high-value="100" show-input-field="false" inverted="false" class="slider" />
-            <ui:DropdownField label="Target Frame Rate" choices="30,40,60,120" tabindex="0" index="2" class="slider" />
-        </ui:VisualElement>
+        <ui:TabView>
+            <ui:Tab label="Tab">
+                <ui:VisualElement name="SettingsMenu" style="flex-grow: 1; align-items: flex-start; justify-content: center;">
+                    <ui:DropdownField label="Frame Rate Cap" choices="Uncapped,30,40,60,120" tabindex="0" index="3" class="slider" />
+                    <ui:VisualElement name="Buffer" style="flex-grow: 1; width: auto; bottom: auto; height: auto; max-height: 0; margin-bottom: 43px;" />
+                    <ui:Label text="Move Foreward" class="slider" />
+                    <ui:Label text="Move Backwards" class="slider" />
+                    <ui:Label text="Move Left" class="slider" />
+                    <ui:Label text="Move Right" class="slider" />
+                    <ui:Label text="Jump" class="slider" />
+                    <ui:Label text="Reset Camera" class="slider" />
+                    <ui:Slider label="Camera Sensitivity" value="0" high-value="100" show-input-field="false" inverted="false" class="slider" />
+                </ui:VisualElement>
+            </ui:Tab>
+            <ui:Tab label="Tab">
+                <ui:VisualElement name="MapMenu" style="justify-content: center; margin-right: -468px;">
+                    <ui:Label text="Map" class="slider" />
+                </ui:VisualElement>
+            </ui:Tab>
+        </ui:TabView>
     </ui:VisualElement>
 </ui:UXML>
