@@ -1594,6 +1594,33 @@ MonoBehaviour:
   pivotPoint: {fileID: 1745322238}
   playerCamFollow: {fileID: 1299883951}
   Cam: {fileID: 330585543}
+  moveAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 04bc03f8-fb4d-4292-9dfc-f70a02188c8d
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  jumpAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 16835ae2-fa2e-4c4b-ab83-87479c2c6a56
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  resetCameraAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: db569e60-ece2-473d-85a2-8843e3c4087a
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!114 &744479090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1606,10 +1633,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e268315b3718e489aa29af8ada5c8418, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camInput: {fileID: 1615137740}
   cursorLock: 1
   paused: 0
   mapOrSettings: 0
+  frameRateTarget: 60
   Menu: {fileID: 959343351}
+  mapScale: 47
+  slidervalue: 0
+  maxSensitivity: 0.2
 --- !u!1 &762930705
 GameObject:
   m_ObjectHideFlags: 0
@@ -2432,7 +2464,7 @@ MonoBehaviour:
       Enabled: 1
       Input:
         InputAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-        Gain: 1
+        Gain: 0.1
         LegacyInput: 
         LegacyGain: 1
         CancelDeltaTime: 0
@@ -2445,7 +2477,7 @@ MonoBehaviour:
       Enabled: 1
       Input:
         InputAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-        Gain: -1
+        Gain: -0.1
         LegacyInput: 
         LegacyGain: 1
         CancelDeltaTime: 0

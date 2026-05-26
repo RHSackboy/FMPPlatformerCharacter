@@ -3,31 +3,45 @@
     <ui:VisualElement name="MainMenu" style="flex-grow: 1; flex-direction: row; background-color: rgba(0, 0, 0, 0.52);">
         <ui:VisualElement name="Navigation" style="flex-grow: 1; opacity: 1; align-self: flex-start; flex-direction: column; align-items: flex-start; justify-content: center; overflow: visible; width: 623px; height: 1080px;">
             <ui:VisualElement name="Buffer" style="flex-grow: 1; width: auto; bottom: auto; height: auto; max-height: 0; margin-bottom: 125px;" />
+            <ui:Button name="Continue" text="Continue" class="button" />
             <ui:Button name="Map" text="Map" class="button" />
             <ui:Button text="Settings" name="Settings" class="button" />
             <ui:Button text="Reset" name="Reset" class="button" />
             <ui:Button text="Quit" name="Quit" class="button" />
-            <ui:Label text="FMP Ver 1.0.0" style="color: rgb(255, 251, 232); -unity-font-definition: url(&quot;project://database/Assets/Media/Fonts/FOT-Rodin%20Pro%20EB.otf?fileID=12800000&amp;guid=b8ef418dc3ae6432aac3015ec47e72ac&amp;type=3#FOT-Rodin Pro EB&quot;); font-size: 32px; margin-top: 90px; margin-left: 60px; opacity: 0.5;" />
+            <ui:Label text="FMP Ver 1.0.0" style="color: rgb(255, 251, 232); -unity-font-definition: url(&quot;project://database/Assets/Media/Fonts/FOT-Rodin%20Pro%20EB.otf?fileID=12800000&amp;guid=b8ef418dc3ae6432aac3015ec47e72ac&amp;type=3#FOT-Rodin Pro EB&quot;); font-size: 32px; margin-top: 0; margin-left: 60px; opacity: 0.5; translate: 0 53px;" />
+            <ui:VisualElement name="Buffer" style="flex-grow: 1; width: auto; bottom: auto; height: auto; max-height: 0; margin-bottom: 125px;" />
         </ui:VisualElement>
-        <ui:TabView>
-            <ui:Tab label="Tab">
-                <ui:VisualElement name="SettingsMenu" style="flex-grow: 1; align-items: flex-start; justify-content: center;">
-                    <ui:DropdownField label="Frame Rate Cap" choices="Uncapped,30,40,60,120" tabindex="0" index="3" class="slider" />
-                    <ui:VisualElement name="Buffer" style="flex-grow: 1; width: auto; bottom: auto; height: auto; max-height: 0; margin-bottom: 43px;" />
-                    <ui:Label text="Move Foreward" class="slider" />
-                    <ui:Label text="Move Backwards" class="slider" />
-                    <ui:Label text="Move Left" class="slider" />
-                    <ui:Label text="Move Right" class="slider" />
-                    <ui:Label text="Jump" class="slider" />
-                    <ui:Label text="Reset Camera" class="slider" />
-                    <ui:Slider label="Camera Sensitivity" value="0" high-value="100" show-input-field="false" inverted="false" class="slider" />
-                </ui:VisualElement>
-            </ui:Tab>
-            <ui:Tab label="Tab">
-                <ui:VisualElement name="MapMenu" style="justify-content: center; margin-right: -468px;">
-                    <ui:Label text="Map" class="slider" />
-                </ui:VisualElement>
-            </ui:Tab>
-        </ui:TabView>
+        <ui:VisualElement name="SettingsMenu" style="flex-grow: 1; align-items: flex-start; justify-content: center; left: 942px; position: absolute; top: 229px;">
+            <ui:DropdownField label="Frame Rate Cap" choices="Uncapped,30,40,60,120" tabindex="0" index="3" name="FrameRateCap" class="slider" style="left: -5px;" />
+            <ui:VisualElement name="Buffer" style="flex-grow: 1; width: auto; bottom: auto; height: auto; max-height: 0; margin-bottom: 43px;" />
+            <ui:Label text="Move Foreward" name="Label" class="slider" style="flex-direction: column;">
+                <ui:Button name="MoveFBinding" text="Rebind" class="button" style="width: 175px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; flex-basis: 56px; font-size: 30px; border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px; border-top-left-radius: 47px; border-top-right-radius: 47px; border-bottom-right-radius: 47px; border-bottom-left-radius: 47px; translate: 402px -7px;" />
+            </ui:Label>
+            <ui:Label text="Move Backward" name="Label" class="slider" style="flex-direction: column;">
+                <ui:Button name="MoveBBinding" text="Rebind" class="button" style="width: 175px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; flex-basis: 56px; font-size: 30px; border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px; border-top-left-radius: 47px; border-top-right-radius: 47px; border-bottom-right-radius: 47px; border-bottom-left-radius: 47px; translate: 402px -7px;" />
+            </ui:Label>
+            <ui:Label text="Move Left" name="Label" class="slider" style="flex-direction: column;">
+                <ui:Button name="MoveLBinding" text="Rebind" class="button" style="width: 175px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; flex-basis: 56px; font-size: 30px; border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px; border-top-left-radius: 47px; border-top-right-radius: 47px; border-bottom-right-radius: 47px; border-bottom-left-radius: 47px; translate: 402px -7px;" />
+            </ui:Label>
+            <ui:Label text="Move Right" name="Label" class="slider" style="flex-direction: column;">
+                <ui:Button name="MoveRBinding" text="Rebind" class="button" style="width: 175px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; flex-basis: 56px; font-size: 30px; border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px; border-top-left-radius: 47px; border-top-right-radius: 47px; border-bottom-right-radius: 47px; border-bottom-left-radius: 47px; translate: 402px -7px;" />
+            </ui:Label>
+            <ui:Label text="Jump" name="Label" class="slider" style="flex-direction: column;">
+                <ui:Button name="JumpBinding" text="Rebind" class="button" style="width: 175px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; flex-basis: 56px; font-size: 30px; border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px; border-top-left-radius: 47px; border-top-right-radius: 47px; border-bottom-right-radius: 47px; border-bottom-left-radius: 47px; translate: 402px -7px;" />
+            </ui:Label>
+            <ui:Label text="Reset Camera" name="Label" class="slider" style="flex-direction: column;">
+                <ui:Button name="ResetCamBinding" text="Rebind" class="button" style="width: 175px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; flex-basis: 56px; font-size: 30px; border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px; border-top-left-radius: 47px; border-top-right-radius: 47px; border-bottom-right-radius: 47px; border-bottom-left-radius: 47px; translate: 402px -7px;" />
+            </ui:Label>
+            <ui:VisualElement name="Buffer" style="flex-grow: 1; width: auto; bottom: auto; height: auto; max-height: 0; margin-bottom: 43px;" />
+            <ui:Slider label="Camera Sensitivity" high-value="100" show-input-field="false" inverted="false" name="CameraSensitivity" value="50" class="slider" style="left: -5px;">
+                <ui:Label name="SensitivityNumber" text="0" enable-rich-text="true" class="slider" style="height: 44px; width: 3px;" />
+            </ui:Slider>
+            <ui:Toggle label="Invert Camera X-Axis" name="CamX" class="slider" style="left: -5px;" />
+            <ui:Toggle label="Invert Camera Y-Axis" name="CamY" class="slider" style="left: -5px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="MapMenu" style="justify-content: center; left: 688px; margin-right: 0; flex-direction: column-reverse; position: absolute; top: 176px;">
+            <ui:VisualElement name="Map" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Media/Screenshot%202026-05-16%20at%2015.46.25%20copy.png?fileID=2800000&amp;guid=f706dba6735634ba3a0fd3a4ea17fb60&amp;type=3#Screenshot 2026-05-16 at 15.46.25 copy&quot;); max-width: 100px; max-height: 100px; min-height: 750px; min-width: 1132.5px; align-items: flex-start; justify-content: flex-end; margin-top: 0;" />
+            <ui:VisualElement name="PlayerIcon" style="flex-grow: 1; min-width: 70px; min-height: 90px; max-height: 90px; max-width: 70px; background-image: url(&quot;project://database/Assets/Media/PlayerIcon.png?fileID=2800000&amp;guid=23b014041eb8e4dc388d02b3136cc84b&amp;type=3#PlayerIcon&quot;); position: absolute; transform-origin: center 70%; translate: 296px 47px;" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

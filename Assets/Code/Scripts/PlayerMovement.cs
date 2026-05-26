@@ -114,9 +114,9 @@ public class PlayerMovement : MonoBehaviour
     GameObject Cam;
  
     //input
-    InputAction moveAction;
-    InputAction jumpAction;
-    InputAction resetCameraAction;
+    public InputAction moveAction;
+    public InputAction jumpAction;
+    public InputAction resetCameraAction;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -234,6 +234,7 @@ public class PlayerMovement : MonoBehaviour
     void Inputs()
     {
         Vector2 playerInput;
+
         playerInput.x = moveAction.ReadValue<Vector2>().x;
         playerInput.y = moveAction.ReadValue<Vector2>().y;
         playerInput = Vector2.ClampMagnitude(playerInput, 1f);
@@ -256,7 +257,6 @@ public class PlayerMovement : MonoBehaviour
             recentreing = true;
             Timer.Register(recentreTime, () => recentreing = false);
         }
-
     }
 
     void Jump ()
